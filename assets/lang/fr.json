@@ -1,0 +1,12 @@
+{
+"extention" : "Extension",
+"players_name" : "Noms de joueurs",
+"app_title" : "CHRONO 8 POOL",
+"player1" : "Joueur 1",
+"player2" : "Joueur 2",
+"score" : "Score",
+"time_seconds" : "temps en secondes",
+"orange_alarm" : "Alarme Orange",
+"red_alarm" : "Alarme Rouge",
+"last_alarm" : "Derniére Alarme"
+}
