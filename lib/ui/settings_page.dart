@@ -1,18 +1,17 @@
-
-
 import 'dart:typed_data';
 
 import 'package:chrono_pool/components/applocal.dart';
 import 'package:chrono_pool/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:chrono_pool/settingCode.dart';
+import 'package:chrono_pool/controller/settingController.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../edit_player_name_widget.dart';
-import '../score.dart';
-enum PlayerNumber {UN, DEUX}
+import '../model/score.dart';
+
+enum PlayerNumber { UN, DEUX }
 
 class SettingsPage extends StatefulWidget {
   final String title;
@@ -27,13 +26,12 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  //TextEditingController player1ScoreController = TextEditingController();
-  //TextEditingController player2ScoreController = TextEditingController();
   final SettingsCode settingsCode = new SettingsCode();
 
   String player2ScoreValue = "0";
   String player1ScoreValue = "0";
   XFile? _image;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(8.0),
               child: EditPlayerName(),
             ),
             Card(
@@ -66,16 +64,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   Text("Score", style: Theme.of(context).textTheme.displaySmall),
                   buildScoreRow(
                     PlayerNumber.UN,
-                      "${getLang(context, "player1")}"),
+                    "${getLang(context, "player1")}",
+                  ),
                   buildScoreRow(
-                      PlayerNumber.DEUX,
-                      "${getLang(context, "player2")}"),
+                    PlayerNumber.DEUX,
+                    "${getLang(context, "player2")}",
+                  ),
                 ],
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: Container(
                   child: Column(
@@ -100,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                     "_"), // You can replace this with a TextField for better editing experience
                               ),
@@ -124,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                     "_"), // You can replace this with a TextField for better editing experience
                               ),
@@ -148,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                     "_"), // You can replace this with a TextField for better editing experience
                               ),
@@ -161,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text("${getLang(context, "extension")}",
+                              Text("${getLang(context, "extention")}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineSmall),
@@ -169,49 +169,100 @@ class _SettingsPageState extends State<SettingsPage> {
                               IconButton(
                                 onPressed: () async {
                                   setState(() {
-                                    player1ScoreValue =   settingsCode.playerButtonMinus(player1ScoreValue, "player1_score") as String;
-
+                                    player1ScoreValue =
+                                    settingsCode.playerButtonMinus(
+                                        player1ScoreValue,
+                                        "player1_score") as String;
                                   });
                                 },
                                 icon: Icon(Icons.remove_circle),
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(player1ScoreValue
-                                    ), // You can replace this with a TextField for better editing experience
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                    player1ScoreValue), // You can replace this with a TextField for better editing experience
                               ),
                               IconButton(
                                 onPressed: () async {
                                   setState(() {
-                                    player1ScoreValue =   settingsCode.playerButtonPlus(player1ScoreValue, "player1_score") as String;
-
+                                    player1ScoreValue =
+                                    settingsCode.playerButtonPlus(
+                                        player1ScoreValue,
+                                        "player1_score") as String;
                                   });
                                 },
                                 icon: Icon(Icons.add_circle),
                               ),
-
-
-
-
                             ],
                           ),
                         ],
                       ),
-                        ElevatedButton(
-                            onPressed: ()  => _pickImage(ImageSource.gallery),
-                        child: Text('Choose Photo'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+            ),
+            Card(
+              child: Column(
+                children: [
+                  Text("${getLang(context, "time_minute")}", style: Theme.of(context).textTheme.displaySmall),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text("${getLang(context, "match_time")}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall),
+                      Spacer(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.remove_circle),
+                      ),
+                      Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                            "_"), // You can replace this with a TextField for better editing experience
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_circle),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+
+            // New Card Section for Choose a Photo
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () =>
+                            _pickImage(ImageSource.gallery),
+                        child: Text('Choose a Photo'),
                       ),
                       FutureBuilder<Uint8List?>(
                         future: _image?.readAsBytes(),
                         builder: (context, snapshot) {
-                          if(snapshot.hasData && snapshot.data != null) {
+                          if (snapshot.hasData && snapshot.data != null) {
                             return Image.memory(snapshot.data!);
                           } else {
                             return CircularProgressIndicator();
                           }
-                        }
-                      )
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -222,9 +273,10 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
   Widget buildScoreRow(PlayerNumber number, String playerName) {
     return Padding(
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -233,13 +285,15 @@ class _SettingsPageState extends State<SettingsPage> {
           Spacer(),
           IconButton(
             onPressed: () async {
+              player2ScoreValue = await settingsCode.playerButtonMinus(
+                  player2ScoreValue, "player2_score") ;
               setState(() {
-                if(number == PlayerNumber.UN) {
+                if (number == PlayerNumber.UN) {
                   context.read<Score>().decScorePlayer1();
-                }else{
+                } else {
                   context.read<Score>().decScorePlayer2();
                 }
-                player2ScoreValue =   settingsCode.playerButtonMinus(player2ScoreValue , "player2_score") as String;
+
               });
             },
             icon: Icon(Icons.remove_circle),
@@ -248,19 +302,20 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child:
             //Text(player2ScoreValue),
-            number == PlayerNumber.UN ?
-              Text(context.watch<Score>().player1Score.toString()) :
-              Text(context.watch<Score>().player2Score.toString())
-            ),
+            number == PlayerNumber.UN
+                ? Text(context.watch<Score>().player1Score.toString())
+                : Text(context.watch<Score>().player2Score.toString()),
+          ),
           IconButton(
             onPressed: () async {
+              player2ScoreValue  = await settingsCode.playerButtonPlus(
+                  player2ScoreValue, "player2_score") ;
               setState(() {
-                if(number == PlayerNumber.UN) {
+                if (number == PlayerNumber.UN) {
                   context.read<Score>().incScorePlayer1();
-                }else{
+                } else {
                   context.read<Score>().incScorePlayer2();
                 }
-                player2ScoreValue = settingsCode.playerButtonPlus(player2ScoreValue , "player2_score") as String;
 
               });
             },
@@ -268,7 +323,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
-
     );
   }
 
@@ -281,7 +335,3 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 }
-
-
-
-

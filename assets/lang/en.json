@@ -8,5 +8,7 @@
 "time_seconds" : "Time in second",
 "orange_alarm" : "Orange Alarm",
 "red_alarm" : "Red Alarm",
-"last_alarm" : "Last Alarm"
+"last_alarm" : "Last Alarm",
+"time_minute" : "Time in minutes",
+"match_time" : "Match time"
 }

@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'dart:math';
 import 'package:chrono_pool/components/applocal.dart';
-import 'package:chrono_pool/score.dart';
+import 'package:chrono_pool/model/score.dart';
 import 'package:chrono_pool/ui/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';

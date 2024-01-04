@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'components/applocal.dart';
 
 class EditPlayerName extends StatelessWidget {

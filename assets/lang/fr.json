@@ -8,5 +8,7 @@
 "time_seconds" : "temps en secondes",
 "orange_alarm" : "Alarme Orange",
 "red_alarm" : "Alarme Rouge",
-"last_alarm" : "Derniére Alarme"
+"last_alarm" : "Derniére Alarme",
+"time_minute" : "Temps en minutes",
+"match_time" : "Temps de match"
 }

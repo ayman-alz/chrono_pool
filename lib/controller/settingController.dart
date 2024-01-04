@@ -34,6 +34,12 @@ class SettingsCode {
     sharedprefrences.setInt(key, score);
     return score.toString();
   }
+
+
+
+
+
+
 }
 
 
