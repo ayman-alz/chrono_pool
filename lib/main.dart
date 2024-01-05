@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:math';
 import 'package:chrono_pool/components/applocal.dart';
+import 'package:chrono_pool/controller/settings_controller.dart';
 import 'package:chrono_pool/model/score.dart';
 import 'package:chrono_pool/ui/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -41,7 +42,11 @@ class MyApp extends StatelessWidget {
         ),
         home: const MyHomePage(title: "CHRONO 8 POOL"),
         routes: {
-          '/Settings': (context) => SettingsPage(title: "Chrono 8 Pool"),
+          '/Settings': (context) => ChangeNotifierProvider(
+            create: (BuildContext context) =>SettingsController(),
+            child: SettingsPage(title: "Chrono 8 Pool")
+
+          ),
         },
         localizationsDelegates: [
           AppLocale.delegate,
@@ -61,6 +66,7 @@ class MyApp extends StatelessWidget {
             }
           }
           return supportLang.first;
+
         },
       ),
     );

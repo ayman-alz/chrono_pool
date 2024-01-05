@@ -41,67 +41,72 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: GestureDetector(
-        onTap: () {
-          setState(() {
-            if (isTimerRunning) {
-              isTimerRunning = false;
-              countdownKey.currentState?.stopTimer();
-            } else {
-              isTimerRunning = true;
-              countdownKey.currentState?.startTimer();
-            }
-          });
-        },
-        onDoubleTap: () {
-          setState(() {
-            isTimerRunning = false;
-            countdownKey.currentState?.resetTimer();
-          });
-        },
-        child: Column(
-          children: [
-            Container(
-              height: 65.0,
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
+      body: Column(
+        children: [
+          Container(
+            height: 65.0,
+            width: double.infinity,
+            color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextButton(
                     child: Text(
                       "${getLang(context, "extention")}",
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 30) ,
+
                     ),
                     onPressed: () {},
                   ),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Text(
-                  "${context.watch<Score>().player1Name} : ${context.watch<Score>().player1Score}",
-                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                Spacer(),
-                Text(
-                  "${context.watch<Score>().player2Name} : ${context.watch<Score>().player2Score}",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                )
               ],
             ),
-            Flexible(
+          ),
+          Row(
+            children: [
+              Text(
+                "${context.watch<Score>().player1Name} : ${context.watch<Score>().player1Score}",
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              Spacer(),
+              Text(
+                "${context.watch<Score>().player2Name} : ${context.watch<Score>().player2Score}",
+                style: Theme.of(context).textTheme.headlineSmall,
+              )
+            ],
+          ),
+          Flexible(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (isTimerRunning) {
+                    isTimerRunning = false;
+                    countdownKey.currentState?.stopTimer();
+                  } else {
+                    isTimerRunning = true;
+                    countdownKey.currentState?.startTimer();
+                  }
+                });
+              },
+              onDoubleTap: () {
+                setState(() {
+                  isTimerRunning = false;
+                  countdownKey.currentState?.resetTimer();
+                });
+              },
               child: Container(
-                color: Colors.black,
+                color: countdownKey.currentState!.countdownValue > 25 ?Colors.black : Colors.red,
                 child: CountdownTimer(key: countdownKey, isRunning: isTimerRunning),
               ),
             ),
-            Image.network(
-              'https://upload.wikimedia.org/wikipedia/fr/b/b2/Logo_Parcs_nationaux_de_France.png',
-              height: 150.0,
-            )
-          ],
-        ),
+          ),
+          Image.network(
+            'https://upload.wikimedia.org/wikipedia/fr/b/b2/Logo_Parcs_nationaux_de_France.png',
+            height: 150.0,
+          )
+        ],
       ),
     );
   }

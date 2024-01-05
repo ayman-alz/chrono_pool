@@ -1,15 +1,11 @@
 import 'dart:typed_data';
-
-import 'package:chrono_pool/components/applocal.dart';
-import 'package:chrono_pool/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:chrono_pool/controller/settingController.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
 import '../edit_player_name_widget.dart';
 import '../model/score.dart';
+import '../controller/settings_controller.dart';
+import '../components/applocal.dart';
 
 enum PlayerNumber { UN, DEUX }
 
@@ -26,8 +22,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final SettingsCode settingsCode = new SettingsCode();
-
+  int _currentIndex = 0;
   String player2ScoreValue = "0";
   String player1ScoreValue = "0";
   XFile? _image;
@@ -52,229 +47,117 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: EditPlayerName(),
-            ),
-            Card(
-              child: Column(
-                children: [
-                  Text("Score", style: Theme.of(context).textTheme.displaySmall),
-                  buildScoreRow(
-                    PlayerNumber.UN,
-                    "${getLang(context, "player1")}",
-                  ),
-                  buildScoreRow(
-                    PlayerNumber.DEUX,
-                    "${getLang(context, "player2")}",
-                  ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: Container(
+        child: Consumer<SettingsController>(
+          builder: (context,set,oldWidget) {
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: EditPlayerName(),
+                ),
+                Card(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("${getLang(context, "time_seconds")}",
-                          style: Theme.of(context).textTheme.displaySmall),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      Text("Score", style: Theme.of(context).textTheme.displaySmall),
+                      buildScoreRow(
+                        PlayerNumber.UN,
+                        "${getLang(context, "player1")}",set
+                      ),
+                      buildScoreRow(
+                        PlayerNumber.DEUX,
+                        "${getLang(context, "player2")}",set
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("${getLang(context, "time_seconds")}",
+                            style: Theme.of(context).textTheme.displaySmall),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            RowSetting(DataType.ORANGE_ALARM,set,"orange_alarm"),
+                            RowSetting(DataType.RED_ALARM,set,"red_alarm"),
+                            RowSetting(DataType.LAST_ALARM,set,"last_alarm"),
+                            RowSetting(DataType.EXTENTION,set,"extention"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                ),
+                Card(
+                  child: Column(
+                    children: [
+                      Text("${getLang(context, "time_minute")}", style: Theme.of(context).textTheme.displaySmall),
+                      RowSetting(DataType.MATCH_TIME,set,"match_time"),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text("${getLang(context, "orange_alarm")}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.remove_circle),
-                              ),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                    "_"), // You can replace this with a TextField for better editing experience
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.add_circle),
-                              ),
-                            ],
+                          ElevatedButton(
+                            onPressed: () =>
+                                _pickImage(ImageSource.gallery),
+                            child: Text('Choose a Photo'),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text("${getLang(context, "red_alarm")}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.remove_circle),
-                              ),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                    "_"), // You can replace this with a TextField for better editing experience
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.add_circle),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text("${getLang(context, "last_alarm")}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.remove_circle),
-                              ),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                    "_"), // You can replace this with a TextField for better editing experience
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.add_circle),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text("${getLang(context, "extention")}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall),
-                              Spacer(),
-                              IconButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    player1ScoreValue =
-                                    settingsCode.playerButtonMinus(
-                                        player1ScoreValue,
-                                        "player1_score") as String;
-                                  });
-                                },
-                                icon: Icon(Icons.remove_circle),
-                              ),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                    player1ScoreValue), // You can replace this with a TextField for better editing experience
-                              ),
-                              IconButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    player1ScoreValue =
-                                    settingsCode.playerButtonPlus(
-                                        player1ScoreValue,
-                                        "player1_score") as String;
-                                  });
-                                },
-                                icon: Icon(Icons.add_circle),
-                              ),
-                            ],
+                          FutureBuilder<Uint8List?>(
+                            future: _image?.readAsBytes(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                return Image.memory(snapshot.data!);
+                              } else {
+                                return CircularProgressIndicator();
+                              }
+                            },
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-            ),
-            Card(
-              child: Column(
-                children: [
-                  Text("${getLang(context, "time_minute")}", style: Theme.of(context).textTheme.displaySmall),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text("${getLang(context, "match_time")}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall),
-                      Spacer(),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.remove_circle),
-                      ),
-                      Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                            "_"), // You can replace this with a TextField for better editing experience
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.add_circle),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-
-            // New Card Section for Choose a Photo
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () =>
-                            _pickImage(ImageSource.gallery),
-                        child: Text('Choose a Photo'),
-                      ),
-                      FutureBuilder<Uint8List?>(
-                        future: _image?.readAsBytes(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data != null) {
-                            return Image.memory(snapshot.data!);
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+              ],
+            );
+          }
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.abc_rounded), // Icon for the first tab
+            label: 'Tab 1',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.ac_unit), // Icon for the second tab
+            label: 'Tab 2',
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildScoreRow(PlayerNumber number, String playerName) {
+  Widget buildScoreRow(PlayerNumber number, String playerName,SettingsController set) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -285,7 +168,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Spacer(),
           IconButton(
             onPressed: () async {
-              player2ScoreValue = await settingsCode.playerButtonMinus(
+              player2ScoreValue = await set.playerButtonMinus(
                   player2ScoreValue, "player2_score") ;
               setState(() {
                 if (number == PlayerNumber.UN) {
@@ -308,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           IconButton(
             onPressed: () async {
-              player2ScoreValue  = await settingsCode.playerButtonPlus(
+              player2ScoreValue  = await set.playerButtonPlus(
                   player2ScoreValue, "player2_score") ;
               setState(() {
                 if (number == PlayerNumber.UN) {
@@ -333,5 +216,43 @@ class _SettingsPageState extends State<SettingsPage> {
         _image = XFile(pickedImage.path);
       });
     }
+  }
+}
+
+class RowSetting extends StatelessWidget {
+  final DataType type;
+  final SettingsController set;
+  final String label;
+
+  RowSetting(this.type, this.set, this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text("${getLang(context, label)}",
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall),
+        Spacer(),
+        IconButton(
+          onPressed: () {set.decType(type);},
+          icon: Icon(Icons.remove_circle),
+        ),
+        Padding(
+          padding:
+          const EdgeInsets.symmetric(horizontal: 8.0),
+          child: FutureBuilder<int>(
+            future: set.getData(type),
+            builder: (context, snapshot) =>Text(snapshot.data?.toString()??"-")
+          ), // You can replace this with a TextField for better editing experience
+        ),
+        IconButton(
+          onPressed: () {set.incType(type);},
+          icon: Icon(Icons.add_circle),
+        ),
+      ],
+    );
   }
 }
